@@ -1,0 +1,10 @@
+#!/media/edio/836817cd-4853-4696-8539-78f625431b45/edio/PythonProjects/FINANCE_PSW/venvsource/bin/python3
+# -*- coding: utf-8 -*-
+import re
+import sys
+
+from setuptools.command.easy_install import main
+
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())
