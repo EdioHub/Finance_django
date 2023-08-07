@@ -21,3 +21,7 @@ def update_valor_categoria(request, id):
     categoria.save()
     #return JsonResponse({'valor': f'recebi o valor{id}'})
     return JsonResponse({'status' : 'sucesso'})
+
+def ver_planejamento(request):
+    categorias = Categoria.objects.all()
+    return render(request, 'ver_planejamento.html', {'categorias' : categorias})

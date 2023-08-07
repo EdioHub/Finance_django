@@ -26,7 +26,7 @@
                 {% for categoria in categorias %}
                     <tr class="linha">
                         <td>{{categoria}}</td>
-                        <td><input type="text" id ='valor-categoria-{{categoria.id}}' class="form-control" value="{{categoria.valor_planejamento}}"></td>
+                        <td><input type="float" id ='valor-categoria-{{categoria.id}}' class="form-control" value="{{categoria.valor_planejamento}}"></td>
                         <td><button onclick="update_valor_planejamento_categoria({{categoria.id}})">Salvar</button></td>         
                     </tr>
                 {% endfor %}
