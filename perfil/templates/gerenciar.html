@@ -104,13 +104,23 @@
                         <div class="lista-contas-main">
                             <span>{{categoria}}</span>
 
-                            <span class="total-conta"><a href="#"><img src="{% if categoria.essencial %} {% static 'perfil/img/check.png' %}{% else %} {% static 'perfil/img/exit.png' %}  {% endif %}"></a></span>
-                            <a href="{% url 'update_categoria' categoria.id %}"><img src="{% if categoria.essencial %}{% static 'perfil/img/check.png' %}{% else %}{% static 'perfil/img/exit.png' %}{% endif %}"></a>
+                            
+
+                            <span class="total-conta"><a href="{% url 'update_categoria' categoria.id %}"><img src="{% if categoria.essencial %}{% static 'perfil/img/check.png' %}{% else %}{% static 'perfil/img/exit.png' %}{% endif %}" ></a></span>
+                            <!--{% if categoria.essencial %} 
+                                <img.src = {% static 'perfil/img/check.png' %}>
+                            {% else %} 
+                                <img.src = {% static 'perfil/img/exit.png' %}>  
+                            {% endif %}-->
+
+                            
                         </div>
                         <br>
                     {% endfor %}
-                    
+  
+                                      
                 </div>
+
             </div>
         </div>
     </div>

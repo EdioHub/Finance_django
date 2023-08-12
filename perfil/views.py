@@ -4,17 +4,36 @@ from .models import Conta ,Categoria
 from django.contrib import messages
 from django.contrib.messages import constants
 from django.db.models import Sum
-from .utils import  calcula_total
+from .utils import  calcula_total, calcula_equilibrio_financeiro
+from extrato.models import Valores
+from datetime import datetime
 # Create your views here.
 
 
 def home(request):   
     #return HttpResponse('estou na home')
+    valores =Valores.objects.filter(data__month = datetime.now().month)
     contas = Conta.objects.all()
+    entradas = valores.filter(tipo = 'E')
+    saidas = valores.filter(tipo = 'S')
+
+    total_entradas = calcula_total(entradas,'valor')
+    total_saidas =calcula_total(saidas,'valor')
 
     total_contas = calcula_total(contas, 'valor')
     #total_contas = contas.aggregate(Sum('valor'))['valor__sum']
-    return render(request, 'home.html', {'contas' : contas, 'total_contas' : total_contas})
+    #calcula_equilibrio_financeiro()
+
+    porcentual_gastos_essenciais,porcentual_gastos_nao_essenciais = calcula_equilibrio_financeiro()
+    #print(porcentual_gastos_essenciais,porcentual_gastos_nao_essenciais )
+    #contest
+    return render(request, 'home.html', {'contas' : contas,
+                                          'total_contas' : total_contas,
+                                          'total_entradas': total_entradas,
+                                          'total_saidas': total_saidas,
+                                          'porcentual_gastos_essenciais': int(porcentual_gastos_essenciais),
+                                          'porcentual_gastos_nao_essenciais': int(porcentual_gastos_nao_essenciais)
+                                          })
 
 def gerenciar(request):
     contas = Conta.objects.all()
@@ -42,7 +61,7 @@ def cadastrar_banco(request):
     #strip pras garantir que não tem espaço em branco
     if len(apelido.strip()) == 0 or len(valor.strip()) == 0:
         messages.add_message(request,constants.ERROR, "Preencha todos os campos")
-        return redirect('/perfil/gerenciar/')
+        return redirect('/perfil/gerenciar/') 
 
 
     conta = Conta(   
@@ -84,3 +103,25 @@ def update_categoria(request,id):
     categoria.essencial = not categoria.essencial
     categoria.save()
     return redirect('/perfil/gerenciar/')
+
+def dashboard(request):
+    dados = {}
+
+    categorias = Categoria.objects.all()
+    for categoria in categorias:
+        #print(categoria)
+        total = 0
+        valores = Valores.objects.filter(categoria = categoria)
+        #print(f'{categoria} -> {valores}')
+        for v in valores:
+            total = + v.valor
+
+        dados[categoria.categoria] = total
+
+        #print(f'{categoria} -> {total}')
+    print(dados)
+
+
+
+    return render(request,'dashboard.html',{'labels': list(dados.keys()),
+                                            'values': list(dados.values()) })
